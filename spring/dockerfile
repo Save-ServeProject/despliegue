@@ -1,0 +1,14 @@
+# Usa una imagen base de OpenJDK con la versión 17
+FROM openjdk:23-jdk
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copia el archivo WAR de la aplicación al contenedor
+COPY target/demo-0.0.1-SNAPSHOT.jar /app/saveandserve.jar
+
+# Expone el puerto en el que se ejecuta la aplicación
+EXPOSE 9000
+
+# Comando para ejecutar la aplicación cuando el contenedor se inicia
+CMD ["java", "-jar", "saveandserve.jar"]
