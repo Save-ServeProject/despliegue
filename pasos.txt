@@ -1,0 +1,44 @@
+LO PRIMERO EJECUTAR DOCKER
+INICIAR SESIÓN CON MI CUENTA DE DOCKER MEDIANTE GITHUB
+
+Angular (frontend)
+- Duplicamos el pryocto para hacer unos cambios y que no influyan cuando ejecutemos local (no hacer push de cambios a github)
+- Copiar archivo dockerfile a la carpeta del proyecto
+- Usando la lupa de VSCode remplazamos todas las rutas "localhost:9000" por "20.50.198.138:9000"
+- Ejecutar comando de construcción de imagen: 
+	- Antes de ejecutar cambiar la versión, es lo que va después de los dos puntos (:1.0.0)
+	- Colocar una versión posterior modificando los dos últimos números: EJ --> (:1.0.1)
+	- docker build -t belendelamoneda/saveandserve_web:1.0.0 . 
+- Una vez terminada la construcción de la imagen, en la app de Docker hay que buscar la ultima imagen creada con el nombre: belendelamoneda/saveandserve_web y la versión correspondiente
+- Click en los tres puntos, seleccionamos --> Push to Docker hub (Publicar en Docker hub)
+
+Spring (back-end)
+- Duplicamos el pryocto para hacer unos cambios y que no influyan cuando ejecutemos local (no hacer push de cambios a github)
+- Remplazamos el POM y el application.properties de los que hayan en el proyecto y por los que hay en esta carpeta
+- Pulsamos --> Cntr + shift + p --> En la ventana que aparece buscamos --> Reload Window --> Enter
+- Copiamos el .env dentro del proyecto fuera de todas las carpetas y el resto de archivos dentro de demo
+- Cambiamos el docker-compose_local.yaml a docker-compose.yaml
+- Lo ejecutamos con docker-compose up -d
+- Esto abre la base de datos para poder compilar el proyecto
+- Lo ejecutamos una vez para ver que todo funciona en local
+- Una vez hecho esto y funcionando lo vamos a compilar con el siguiente comando
+- Nos aseguramos estar en la terminal dentro de la carpeta demo
+- ${env:MYSQL_USER}='root'; ${env:MYSQL_ROOT_PASSWORD}='Saveandserve!'; ${env:MYSQL_DATABASE}='saveandserve'; ${env:SPRING_DATASOURCE_URL}='jdbc:mysql://localhost:3306/saveandserve'; .\mvnw.cmd install -f .\pom.xml
+- Si termina con éxito ya está compilado y repetimos los pasos como con angular pero con alguna diferencia
+- Ejecutar comando de construcción de imagen: 
+	- Antes de ejecutar cambiar la versión, es lo que va después de los dos puntos (:1.0.0)
+	- Colocar una versión posterior modificando los dos últimos números: EJ --> (:1.0.1)
+	- docker build -t belendelamoneda/saveandserve:1.0.0 . 
+	- El nombre de la imagen ha cambiado y contiene "_web" antes de la versión
+- Una vez terminada la construcción de la imagen, en la app de Docker hay que buscar la ultima imagen creada con el nombre: belendelamoneda/saveandserve_web y la versión correspondiente
+- Click en los tres puntos, seleccionamos --> Push to Docker hub (Publicar en Docker hub)
+
+Una vez todo terminado nos vamos a conectar a la máquina virtual en azure para desplegar los cambios
+
+- ssh belen@20.50.198.138 (nos pedirá la contraseña)
+- cd saveandserve/
+- sudo docker-compose down
+- nano docker-compose
+- buscamos el nombre las imágenes y cambiamos la versión
+- guardamos el archivo
+- sudo docker-compose up -d
